@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Task Manager</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: #f1efe8;
+      padding: 25px;
+      color: #1a1a1a;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .header {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .header-icon {
+      font-size: 40px;
+      color: #4f46e5;
+    }
+
+    .header h1 {
+      font-size: 28px;
+    }
+
+    .header p {
+      color: #777;
+      font-size: 14px;
+    }
+
+    .badge {
+      background: #eef2ff;
+      color: #4f46e5;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 14px;
+      padding: 18px;
+      border: 1px solid #ddd;
+    }
+
+    .stat-card h3 {
+      color: #666;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .stat-card p {
+      font-size: 34px;
+      font-weight: bold;
+    }
+
+    .task-panel {
+      background: white;
+      border-radius: 14px;
+      border: 1px solid #ddd;
+      padding: 20px;
+    }
+
+    .section-title {
+      margin-bottom: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .btn {
+      background: #4f46e5;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 20px 0;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-left,
+    .toolbar-right {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .task-card {
+      background: #fff;
+      border-radius: 12px;
+      border-left: 6px solid #4f46e5;
+      padding: 16px;
+      border: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .task-info h3 {
+      margin-bottom: 8px;
+    }
+
+    .task-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .high {
+      background: #fef2f2;
+      color: #dc2626;
+    }
+
+    .medium {
+      background: #fffbeb;
+      color: #d97706;
+    }
+
+    .low {
+      background: #ecfdf5;
+      color: #059669;
+    }
+
+    .gray {
+      background: #f1f1f1;
+      color: #666;
+    }
+
+    .task-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .small-btn {
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .done-btn {
+      background: #10b981;
+      color: white;
+    }
+
+    .delete-btn {
+      background: #dc2626;
+      color: white;
+    }
+
+    .completed {
+      opacity: 0.6;
+      text-decoration: line-through;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid,
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .task-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="header">
+      <div class="header-left">
+        <div class="header-icon">☑</div>
+
+        <div>
+          <h1>Student Task Manager</h1>
+          <p>Simple Student To-Do List System</p>
+        </div>
+      </div>
+
+      <div class="badge">Task Manager</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <h3>TOTAL</h3>
+        <p id="totalTasks">0</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>PENDING</h3>
+        <p id="pendingTasks">0</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>DONE</h3>
+        <p id="doneTasks">0</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>OVERDUE</h3>
+        <p id="overdueTasks">0</p>
+      </div>
+    </div>
+
+    <div class="task-panel">
+
+      <div class="section-title">✚ Add New Task</div>
+
+      <div class="form-grid">
+        <input type="text" id="title" placeholder="Task Title">
+        <input type="text" id="subject" placeholder="Subject">
+        <input type="date" id="dueDate">
+      </div>
+
+      <div class="form-grid">
+        <select id="priority">
+          <option value="high">🔴 High</option>
+          <option value="medium">🟡 Medium</option>
+          <option value="low">🟢 Low</option>
+        </select>
+
+        <select id="type">
+          <option>Assignment</option>
+          <option>Exam</option>
+          <option>Project</option>
+          <option>Reading</option>
+          <option>Lab</option>
+        </select>
+
+        <button class="btn" onclick="addTask()">Add Task</button>
+      </div>
+
+      <div class="toolbar">
+
+        <div class="toolbar-left">
+          <select id="filterPriority" onchange="renderTasks()">
+            <option value="all">All Priorities</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+
+          <select id="filterStatus" onchange="renderTasks()">
+            <option value="all">All Tasks</option>
+            <option value="pending">Pending</option>
+            <option value="done">Done</option>
+          </select>
+        </div>
+
+        <div class="toolbar-right">
+          <button class="btn" onclick="undoTask()">↩ Undo</button>
+          <button class="btn" onclick="clearDone()">🗑 Clear Done</button>
+        </div>
+      </div>
+
+      <div class="task-list" id="taskList"></div>
+
+    </div>
+
+  </div>
+
+  <script>
+    let tasks = [];
+    let undoStack = [];
+
+    function addTask() {
+      const title = document.getElementById('title').value;
+      const subject = document.getElementById('subject').value;
+      const dueDate = document.getElementById('dueDate').value;
+      const priority = document.getElementById('priority').value;
+      const type = document.getElementById('type').value;
+
+      if (!title) {
+        alert('Please enter a task title');
+        return;
+      }
+
+      const task = {
+        id: Date.now(),
+        title,
+        subject,
+        dueDate,
+        priority,
+        type,
+        done: false
+      };
+
+      tasks.push(task);
+      undoStack.push({ type: 'add', task });
+
+      renderTasks();
+      updateStats();
+
+      document.getElementById('title').value = '';
+      document.getElementById('subject').value = '';
+      document.getElementById('dueDate').value = '';
+    }
+
+    function renderTasks() {
+      const taskList = document.getElementById('taskList');
+      taskList.innerHTML = '';
+
+      const filterPriority = document.getElementById('filterPriority').value;
+      const filterStatus = document.getElementById('filterStatus').value;
+
+      let filtered = [...tasks];
+
+      if (filterPriority !== 'all') {
+        filtered = filtered.filter(task => task.priority === filterPriority);
+      }
+
+      if (filterStatus === 'done') {
+        filtered = filtered.filter(task => task.done);
+      }
+
+      if (filterStatus === 'pending') {
+        filtered = filtered.filter(task => !task.done);
+      }
+
+      filtered.forEach(task => {
+        const taskCard = document.createElement('div');
+        taskCard.className = 'task-card';
+
+        const priorityClass = task.priority;
+        const completedClass = task.done ? 'completed' : '';
+
+        taskCard.innerHTML = `
+          <div class="task-info ${completedClass}">
+            <h3>${task.title}</h3>
+
+            <div class="task-meta">
+              <span class="pill ${priorityClass}">${task.priority}</span>
+              <span class="pill gray">${task.subject || 'General'}</span>
+              <span class="pill gray">${task.type}</span>
+              <span class="pill gray">📅 ${task.dueDate || 'No due date'}</span>
+            </div>
+          </div>
+
+          <div class="task-actions">
+            <button class="small-btn done-btn" onclick="toggleDone(${task.id})">
+              ${task.done ? 'Undo' : 'Done'}
+            </button>
+
+            <button class="small-btn delete-btn" onclick="deleteTask(${task.id})">
+              Delete
+            </button>
+          </div>
+        `;
+
+        taskList.appendChild(taskCard);
+      });
+    }
+
+    function toggleDone(id) {
+      const task = tasks.find(t => t.id === id);
+      if (task) {
+        undoStack.push({ type: 'toggle', id, prev: task.done });
+        task.done = !task.done;
+      }
+
+      renderTasks();
+      updateStats();
+    }
+
+    function deleteTask(id) {
+      const task = tasks.find(t => t.id === id);
+
+      undoStack.push({ type: 'delete', task });
+
+      tasks = tasks.filter(task => task.id !== id);
+
+      renderTasks();
+      updateStats();
+    }
+
+    function clearDone() {
+      tasks = tasks.filter(task => !task.done);
+      renderTasks();
+      updateStats();
+    }
+
+    function undoTask() {
+      const action = undoStack.pop();
+
+      if (!action) return;
+
+      if (action.type === 'add') {
+        tasks = tasks.filter(task => task.id !== action.task.id);
+      }
+
+      else if (action.type === 'delete') {
+        tasks.push(action.task);
+      }
+
+      else if (action.type === 'toggle') {
+        const task = tasks.find(t => t.id === action.id);
+
+        if (task) {
+          task.done = action.prev;
+        }
+      }
+
+      renderTasks();
+      updateStats();
+    }
+
+    function updateStats() {
+      const total = tasks.length;
+      const done = tasks.filter(task => task.done).length;
+      const pending = total - done;
+
+      const today = new Date();
+
+      const overdue = tasks.filter(task => {
+        if (!task.dueDate || task.done) return false;
+
+        return new Date(task.dueDate) < today;
+      }).length;
+
+      document.getElementById('totalTasks').innerText = total;
+      document.getElementById('pendingTasks').innerText = pending;
+      document.getElementById('doneTasks').innerText = done;
+      document.getElementById('overdueTasks').innerText = overdue;
+    }
+
+    renderTasks();
+    updateStats();
+  </script>
+
+</body>
+</html>
